@@ -1,4 +1,4 @@
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Deque<T>{
 
     private final Node sentinel;
     private int size;
@@ -39,6 +39,7 @@ public class LinkedListDeque<T> {
      *
      * @param item added
      */
+    @Override
     public void addFirst(T item) {
         Node newNode = new Node(item, sentinel, sentinel.next);
         sentinel.next.back = newNode;
@@ -50,6 +51,7 @@ public class LinkedListDeque<T> {
      *
      * @param item be added
      */
+    @Override
     public void addLast(T item) {
         Node newNode = new Node(item, sentinel.back, sentinel);
         sentinel.back.next = newNode;
@@ -57,20 +59,17 @@ public class LinkedListDeque<T> {
         size = size + 1;
     }
 
-    /** Return true if the deque is empty, false otherwise */
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
     /** Return the size of the deque
      *
      * @return size of the deque
      */
+    @Override
     public int size() {
         return size;
     }
 
     /** Print the whole deque from head to end */
+    @Override
     public void printDeque() {
         Node p = sentinel.next;
         while (p.next != sentinel) {
@@ -83,6 +82,7 @@ public class LinkedListDeque<T> {
      *
       * @return the first item
      */
+    @Override
     public T removeFirst() {
         T item = sentinel.next.item;
         sentinel.next.next.back = sentinel;
@@ -95,6 +95,7 @@ public class LinkedListDeque<T> {
      *
      * @return last item
      */
+    @Override
     public T removeLast() {
 
         T item = sentinel.back.item;
@@ -110,6 +111,7 @@ public class LinkedListDeque<T> {
      * @param index location in the deque
      * @return the item at the given item
      */
+    @Override
     public T get(int index) {
 
         Node p = sentinel.next;
@@ -131,8 +133,6 @@ public class LinkedListDeque<T> {
             return node.item;
         }
         return getRecursive(node.next, i - 1);
-
-
     }
 
 
