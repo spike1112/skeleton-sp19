@@ -73,7 +73,7 @@ public class ArrayDeque<T> {
 
     /* Remove the first element of deque, resize it if too sparse */
     public T removeFirst() {
-        if ((size - 1.0)/items.length < LOADFACTOR) {
+        if (size >=16 && (size - 1.0)/items.length < LOADFACTOR) {
             resize(items.length / 2);
         }
         nextHead = (nextHead + 1) % items.length;
