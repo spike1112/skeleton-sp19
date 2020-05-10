@@ -112,7 +112,7 @@ public class LinkedListDeque<T> {
      */
     public T get(int index) {
 
-        Node p = sentinel;
+        Node p = sentinel.next;
         int i = 0;
         while (p.next != sentinel && i != index) {
             p = p.next;
