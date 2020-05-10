@@ -33,7 +33,7 @@ public class ArrayDeque<T> {
             resize(2 * items.length);
         }
         items[nextHead] = item;
-        nextHead = (nextHead - 1) % items.length;
+        nextHead = Math.floorMod(nextHead - 1, items.length);
         size = size + 1;
     }
 
@@ -43,7 +43,7 @@ public class ArrayDeque<T> {
             resize(2 * items.length);
         }
         items[nextEnd] = item;
-        nextEnd = (nextEnd + 1) % items.length;
+        nextEnd = Math.floorMod(nextEnd + 1, items.length);
         size = size + 1;
     }
 
@@ -58,25 +58,34 @@ public class ArrayDeque<T> {
     /* Resize the array with the capacity */
     private void resize(int capacity) {
         T[] newItems = (T[]) new Object[capacity];
-        System.arraycopy(items, (nextHead-1)%items.length, newItems, 0, size);
+
+        //int head = (nextHead - 1) % items.length;
+        int head = Math.floorMod(nextHead + 1, items.length);
+        for (int i = 0; i < size; i++) {
+            newItems[head] = items[head];
+            head = Math.floorMod(head + 1, items.length);
+        }
         items = newItems;
+        nextHead = items.length - 1;
+        nextEnd = size;
     }
 
     public void printDeque() {
 
-        int head = (nextHead - 1) % items.length;
+        //int head = (nextHead - 1) % items.length;
+        int head = Math.floorMod(nextHead + 1, items.length);
         for (int i = 0; i < size; i++) {
             System.out.print(items[head]);
-            head = (head + 1) % items.length;
+            head = Math.floorMod(head + 1, items.length);
         }
     }
 
     /* Remove the first element of deque, resize it if too sparse */
     public T removeFirst() {
-        if (size >=16 && (size - 1.0)/items.length < LOADFACTOR) {
+        if (size >= 16 && (size - 1.0)/items.length < LOADFACTOR) {
             resize(items.length / 2);
         }
-        nextHead = (nextHead + 1) % items.length;
+        nextHead = Math.floorMod(nextHead + 1, items.length);
         size = size - 1;
         return items[nextHead];
     }
@@ -86,7 +95,7 @@ public class ArrayDeque<T> {
         if ((size - 1.0)/items.length < LOADFACTOR) {
             resize(items.length / 2);
         }
-        nextEnd = (nextEnd - 1) % items.length;
+        nextEnd = Math.floorMod(nextEnd - 1, items.length);
         size = size - 1;
         return items[nextEnd];
     }
@@ -96,7 +105,7 @@ public class ArrayDeque<T> {
         if (index > size) {
             throw new IllegalArgumentException("index must less than deque's size");
         }
-        int head = (nextHead + 1) % items.length;
+        int head = Math.floorMod(nextHead + 1, items.length);
         return items[(head + index) % items.length];
     }
 }

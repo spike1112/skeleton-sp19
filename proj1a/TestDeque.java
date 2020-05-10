@@ -51,4 +51,21 @@ public class TestDeque {
         assertEquals("hello", deque.get(2));
 
     }
+
+    /* test core method: resize()*/
+    @Test
+    public void testResize() {
+        ArrayDeque<Integer> deque = new ArrayDeque<>();
+
+        for (int i = 0; i < 100; i++) {
+            deque.addLast(i);
+        }
+        assertEquals(deque.get(56), (float) 56, 0.0);
+
+        for (int i = 0; i < 90; i++) {
+            deque.removeLast();
+        }
+        assertEquals(deque.get(3), (float)3, 0.0);
+
+    }
 }
