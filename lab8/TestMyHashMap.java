@@ -63,10 +63,10 @@ public class TestMyHashMap {
         assertEquals(0, b.size());
         b.put("hi", 1);
         assertEquals(1, b.size());
-        for (int i = 0; i < 455; i++) {
+        for (int i = 0; i < 150; i++) {
             b.put("hi" + i, 1);
         }
-        assertEquals(456, b.size());
+        assertEquals(151, b.size());
     }
 
     //assumes get/containskey work
