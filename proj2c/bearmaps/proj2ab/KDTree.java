@@ -1,4 +1,4 @@
-package bearmaps;
+package bearmaps.proj2ab;
 
 import java.util.Comparator;
 import java.util.List;
@@ -37,8 +37,7 @@ public class KDTree implements PointSet{
                 compareX = false;
                 return new TreeNode(p, xComparator);
             }
-
-            compareX = true;
+            compareX =true;
             return new TreeNode(p, yComparator);
         }
         int cmp = node.comparator.compare(p, node.point);

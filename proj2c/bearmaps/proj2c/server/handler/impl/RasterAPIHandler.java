@@ -17,8 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static bearmaps.proj2c.utils.Constants.SEMANTIC_STREET_GRAPH;
-import static bearmaps.proj2c.utils.Constants.ROUTE_LIST;
+import static bearmaps.proj2c.utils.Constants.*;
 
 /**
  * Handles requests from the web browser for map images. These images
@@ -68,6 +67,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      *
      * @param requestParams Map of the HTTP GET request's query parameters - the query box and
      *               the user viewport width and height.
+     *          {lrlon=-122.23109668496704, ullon=-122.28907531503296, w=1351.0, h=637.0, ullat=37.882617848983784, lrlat=37.86103415101621}
      *
      * @param response : Not used by this function. You may ignore.
      * @return A map of results for the front end as specified: <br>
@@ -87,9 +87,80 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
         //System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+        Map<String, Double> record = new HashMap<>();
+        //System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
+          //      + "your browser.");
+        double lrlon = requestParams.get("lrlon"), ullon = requestParams.get("ullon");
+        double lrlat = requestParams.get("lrlat"), ullat = requestParams.get("ullat");
+        double requestLonDPP = (lrlon - ullon) / requestParams.get("w");
+        double rootLon = ROOT_LRLON - ROOT_ULLON;
+        int d;
+        //determine depth
+        for (d = 0; d < 7; d++) {
+            double responseLonDPP = rootLon / (Math.pow(2, d) * TILE_SIZE);
+            if (responseLonDPP <= requestLonDPP) {
+                break;
+            }
+        }
+
+        //Invalid request
+        if (ullon > lrlon || lrlat > ullat) {
+            results.put("query_success", false);
+            return results;
+        }
+        //query box is outside the map
+        if (ullon > ROOT_LRLON || lrlon < ROOT_ULLON || ullat < ROOT_LRLAT || lrlat > ROOT_ULLAT) {
+            results.put("query_success", false);
+            return results;
+        }
+        results.put("render_grid", findPNG(record, d, ullon, lrlon, ullat, lrlat));
+        results.put("depth", d);
+        results.put("query_success", true);
+        results.put("raster_ul_lon", record.get("ullon"));
+        results.put("raster_ul_lat", record.get("ullat"));
+        results.put("raster_lr_lon", record.get("lrlon"));
+        results.put("raster_lr_lat", record.get("lrlat"));
+
         return results;
+    }
+
+    private String[][] findPNG(Map<String, Double> record, int d, double ullon, double lrlon, double ullat, double lrlat) {
+
+        double xsize = (ROOT_LRLON - ROOT_ULLON) / Math.pow(2, d);
+        double ysize = (ROOT_ULLAT - ROOT_LRLAT) / Math.pow(2, d);
+        int startX = (int) ((ullon - ROOT_ULLON) / xsize);
+        int endX = (int) ((lrlon - ROOT_ULLON) / xsize) + 1;
+        int startY = (int) ((ROOT_ULLAT - ullat) / ysize);
+        int endY = (int) ((ROOT_ULLAT - lrlat) / ysize) + 1;
+        if (startX < 0) {
+            startX = 0;
+        }
+        if (endX > Math.pow(2, d) - 1) {
+            endX = (int) Math.pow(2, d);
+        }
+        if (startY < 0) {
+            startY = 0;
+        }
+        if (endY > Math.pow(2, d) - 1) {
+            endY = (int) Math.pow(2, d);
+        }
+
+        record.put("ullon", ROOT_ULLON + startX * xsize);
+        record.put("ullat", ROOT_ULLAT - startY * ysize);
+        record.put("lrlon", ROOT_ULLON + endX * xsize);
+        record.put("lrlat", ROOT_ULLAT - endY * ysize);
+        int x = endX - startX, y = endY - startY;
+        String[][] pngName = new String[y][x];
+        //i: #rows, j: #columns
+        for (int i = 0; i < y; i++) {
+            int xtmp = startX;
+            for (int j = 0; j < x; j++) {
+                pngName[i][j] = "d" + d + "_x" + xtmp + "_y" + startY + ".png";
+                xtmp++;
+            }
+            startY++;
+        }
+        return pngName;
     }
 
     @Override
