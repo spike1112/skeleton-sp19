@@ -3,12 +3,18 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * Basic implementation of HashMap
+ */
 public class MyHashMap<K, V> implements Map61B<K, V>{
 
     private Node<K, V>[] table;
+    //the set to record keys of the map
     private final HashSet<K> keys;
 
     private int initialSize = 16;
+
+    //When #nodes / #buckets >= loadFactor, resize the table
     private double loadFactor = 0.75;
 
     private static class Node<K, V> {

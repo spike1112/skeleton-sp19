@@ -1,5 +1,8 @@
 import java.util.*;
 
+/**
+ *  Basic implementation of BSTMap
+ */
 public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     private TreeNode root;
@@ -91,6 +94,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return node;
     }
 
+    /* Using a queue to collect keys of tree, inspired by the level order search of tree */
     @Override
     public Set<K> keySet() {
         Set<K> keys = new HashSet<>();

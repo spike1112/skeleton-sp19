@@ -3,6 +3,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Basic Trie implementation
+ */
 public class MyTrieSet implements TrieSet61B {
 
     private Node root;

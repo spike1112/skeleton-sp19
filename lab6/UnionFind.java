@@ -73,7 +73,9 @@ public class UnionFind {
     }
 
     /* Returns the root of the set V belongs to. Path-compression is employed
-       allowing for fast search-time. */
+       allowing for fast search-time.
+       When search the root of the vertex, store vertices of the path to a set, then set these vertices directly point the root
+       */
     public int find(int vertex) {
         // TODO
         validate(vertex);

@@ -18,15 +18,24 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex>{
     //Record the distance from vertex v to start
     private Map<Vertex, Double> distTo;
     private ExtrinsicMinPQ<Vertex> pq;
+    //Using this map to get the result path from source point u to target point v
     private Map<Vertex, Vertex> edgeTo;
 
 
+    /**
+     *  Using A* algorithm to get the shortest path of two specific points
+     *  @param input, the graph with all points
+     *  @param start, source point
+     *  @param end, target point
+     *  @param timeout, the max tolerable execution time
+     */
     public AStarSolver(AStarGraph<Vertex> input, Vertex start, Vertex end, double timeout) {
         Stopwatch sw = new Stopwatch();
         pq = new ArrayHeapMinPQ<>();
         distTo = new HashMap<>();
         edgeTo = new HashMap<>();
         distTo.put(start, 0.0);
+        /* initialed with source vertex, latter dynamic increase or remove vertex until get the target vertex */
         pq.add(start, input.estimatedDistanceToGoal(start, end));
         solution = new ArrayList<>();
         numExplored = 0;
@@ -66,6 +75,10 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex>{
         timeSpent = sw.elapsedTime();
     }
 
+    /**
+     *  Relax the edge according distTo[v] + estimated distance from v to target point end
+     *
+     */
     private void relax(AStarGraph<Vertex> g, WeightedEdge<Vertex> v, Vertex end) {
         Vertex p = v.from(), q = v.to();
         double weight = v.weight();
