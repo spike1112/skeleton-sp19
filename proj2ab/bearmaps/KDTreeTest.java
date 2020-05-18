@@ -63,4 +63,22 @@ public class KDTreeTest {
                     kdTree.nearest(p.getX(), p.getY()));
         }
     }
+
+    @Test
+    public void simpleKDTreeTest() {
+        Point p1 = new Point(0.6, 38.6);
+        Point p2 = new Point(0.2, 38.2);
+        Point p3 = new Point(0.5, 38.5);
+        Point p4 = new Point(0.4, 38.4);
+        Point p5 = new Point(0.1, 38.1);
+        Point p6 = new Point(0.4, 38.6);
+        Point p7 = new Point(0.6, 38.3);
+        List<Point> points = List.of(p1, p2, p3, p4, p5, p6, p7);
+        KDTree kd = new KDTree(points);
+        Point p = kd.nearest(0.1, 38.1);
+        assertEquals(p.getX(), 0.1, 0.0);
+        assertEquals(p.getY(), 38.1, 0.0);
+
+    }
+
 }

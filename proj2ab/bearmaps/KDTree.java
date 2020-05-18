@@ -34,19 +34,28 @@ public class KDTree implements PointSet{
     private TreeNode insert(TreeNode node, Point p) {
         if (node == null) {
             if (compareX) {
+
+
                 compareX = false;
                 return new TreeNode(p, xComparator);
+                /*
+                TreeNode newNode = new TreeNode(p, xComparator);
+                compareX = false;
+                return newNode; */
             }
-            compareX =true;
+
+            compareX = true;
             return new TreeNode(p, yComparator);
+           /*
+            TreeNode newNode = new TreeNode(p, yComparator);
+            compareX = true;
+            return newNode; */
         }
         int cmp = node.comparator.compare(p, node.point);
-        if (cmp > 0) {
-            node.rightChild = insert(node.rightChild, p);
-        } else if (cmp == 0) {
-            return node;
-        } else {
+        if (cmp < 0) {
             node.leftChild = insert(node.leftChild, p);
+        } else {
+            node.rightChild = insert(node.rightChild, p);
         }
         return node;
     }
