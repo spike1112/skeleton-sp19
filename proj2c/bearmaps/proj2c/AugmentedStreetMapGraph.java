@@ -23,7 +23,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private List<Node> nodes;
     private MyTrieSet trieSet;
     private Map<String, String> cleanedToFull;
+
     private Map<String, List<Node>> nameToNodes;//one name may have(map) several nodes
+    
 
 
     public AugmentedStreetMapGraph(String dbPath) {
@@ -41,6 +43,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                 trieSet.add(cleanName);
                 cleanedToFull.put(cleanName, name);
 
+                /* I think this part can replace by ~nameToNdes.computeIfAbsent(String, new List(node)).add(node)~ */
                 if (nameToNodes.get(cleanName) == null) {
                     nameToNodes.put(cleanName, List.of(node));
                 } else {
